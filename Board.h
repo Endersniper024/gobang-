@@ -26,16 +26,17 @@ public:
     void placeStone(ChessPos* pos, chess_kind_t kind);
     void ctrlMenu(int opt);
     int getGradeSize(); //获取棋盘大小 13 15 19；
-    int getChessData(ChessPos* pos);
-    int getChessData(int row, int col);
+    int getBoard(ChessPos* pos);
+    int getBoard(int row, int col);
     bool checkOver();
-    
+    bool playerFlag;
     // 存档与读档方法
     void saveToFile(std::ofstream& outFile) const;
     void loadFromFile(std::ifstream& inFile);
     bool rst;
     bool sv;
     bool ld;
+    
 private:
     IMAGE blackImg; //黑棋棋子
     IMAGE whiteImg; //白棋棋子
@@ -51,7 +52,7 @@ private:
     std::vector<std::vector<int>> boardMap;
 
     //表示现在该谁下棋
-    bool playerFlag; //true->black false->white
+     //true->black false->white
 
     ChessPos lastPos;
 

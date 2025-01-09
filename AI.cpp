@@ -61,7 +61,7 @@ void AI::evaluate()
 		for (int col = 0; col < size; col++)
 		{
 			// 空白点就算
-			if (row >= 0 && col >= 0 && board->getChessData(row,col) == 0)
+			if (row >= 0 && col >= 0 && board->getBoard(row,col) == 0)
 			{
 				// 遍历周围四个方向
 				int directs[4][2] = {
@@ -83,13 +83,13 @@ void AI::evaluate()
 					for (int i = 1; i <= 4; i++) {
 						if (row + i * y >= 0 && row + i * y < size &&
 							col + i * x >= 0 && col + i * x < size &&
-							board->getChessData(row + i * y,col + i * x) == 1) // 玩家棋子
+							board->getBoard(row + i * y,col + i * x) == 1) // 玩家棋子
 						{
 							playerNum++;
 						}
 						else if (row + i * y >= 0 && row + i * y < size &&
 							col + i * x >= 0 && col + i * x < size &&
-							board->getChessData(row + i * y, col + i * x) == 0) // 空白位
+							board->getBoard(row + i * y, col + i * x) == 0) // 空白位
 						{
 							emptyNum++;
 							break;
@@ -101,13 +101,13 @@ void AI::evaluate()
 					for (int i = 1; i <= 4; i++) {
 						if (row - i * y >= 0 && row - i * y < size &&
 							col - i * x >= 0 && col - i * x < size &&
-							board->getChessData(row - i * y, col - i * x) == 1) // 玩家棋子
+							board->getBoard(row - i * y, col - i * x) == 1) // 玩家棋子
 						{
 							playerNum++;
 						}
 						else if (row - i * y >= 0 && row - i * y < size &&
 							col - i * x >= 0 && col - i * x < size &&
-							board->getChessData(row - i * y, col - i * x) == 0) // 空白位
+							board->getBoard(row - i * y, col - i * x) == 0) // 空白位
 						{
 							emptyNum++;
 							break;
@@ -143,13 +143,13 @@ void AI::evaluate()
 					for (int i = 1; i <= 4; i++) {
 						if (row + i * y >= 0 && row + i * y < size &&
 							col + i * x >= 0 && col + i * x < size &&
-							board->getChessData(row + i * y, col + i * x) == -1) // AI棋子
+							board->getBoard(row + i * y, col + i * x) == -1) // AI棋子
 						{
 							aiNum++;
 						}
 						else if (row + i * y >= 0 && row + i * y < size &&
 							col + i * x >= 0 && col + i * x < size &&
-							board->getChessData(row + i * y, col + i * x) == 0) // 空白位
+							board->getBoard(row + i * y, col + i * x) == 0) // 空白位
 						{
 							emptyNum++;
 							break;
@@ -161,13 +161,13 @@ void AI::evaluate()
 					for (int i = 1; i <= 4; i++) {
 						if (row - i * y >= 0 && row - i * y < size &&
 							col - i * x >= 0 && col - i * x < size &&
-							board->getChessData(row - i * y, col - i * x) == -1) // AI棋子
+							board->getBoard(row - i * y, col - i * x) == -1) // AI棋子
 						{
 							aiNum++;
 						}
 						else if (row - i * y >= 0 && row - i * y < size &&
 							col - i * x >= 0 && col - i * x < size &&
-							board->getChessData(row - i * y, col - i * x) == 0) // 空白位
+							board->getBoard(row - i * y, col - i * x) == 0) // 空白位
 						{
 							emptyNum++;
 							break;
@@ -203,9 +203,6 @@ void AI::evaluate()
 	
 }
 
-
-
-
 ChessPos AI::tk()
 {
 	evaluate();
@@ -217,7 +214,7 @@ ChessPos AI::tk()
 	// 寻找最大分数并存储相关位置
 	for (int row = 0; row < size; row++) {
 		for (int col = 0; col < size; col++) {
-			if (board->getChessData(row, col) == 0) {
+			if (board->getBoard(row, col) == 0) {
 				int currentScore = score[row][col];
 				if (currentScore > maxScore) {
 					// 发现更高的分数，更新最大分数并清空位置列表
@@ -233,12 +230,12 @@ ChessPos AI::tk()
 		}
 	}
 
-	// 使用C++11的随机数生成器，更加高效和准确
+	// 随机生成
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dis(0, maxPoints.size() - 1);
 
-	// 随机选择一个位置
+	// 在score相同时随机选择一个位置
 	return maxPoints[dis(gen)];
 
 }

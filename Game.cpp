@@ -11,10 +11,7 @@ Game::Game(Player* player, AI* ai, Board* board) {
 
 void Game::saveGame(const std::string& filename) const {
     std::ofstream outFile(filename);
-    if (!outFile) {
-        std::cerr << "Error: Could not open file for writing: " << filename << std::endl;
-        return;
-    }
+    
 
     board->saveToFile(outFile);
     player->savePlayerState(outFile);
@@ -60,6 +57,7 @@ void Game::play(bool resetBoard) {
     while (true) {
         // Íæ¼Ò×ßÆå
         player->go();
+        //board->playerFlag = !(board->playerFlag);
         if (board->sv) {
             board->sv = false;
             saveGame("save.txt");

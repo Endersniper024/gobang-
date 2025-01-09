@@ -208,12 +208,12 @@ int Board::getGradeSize()
 	return gradeSize;
 }
 
-int Board::getChessData(ChessPos* pos)
+int Board::getBoard(ChessPos* pos)
 {
 	return boardMap[pos->row][pos->col];
 }
 
-int Board::getChessData(int row, int col)
+int Board::getBoard(int row, int col)
 {
 	return boardMap[row][col];
 }
@@ -226,24 +226,19 @@ bool Board::checkOver()
 	if (win()) {
 		Sleep(1500);
 		if (playerFlag == false) {
-			loadimage(0, "res/胜利.jpg", window_wid, window_hei, true);
+			loadimage(0, "res/victory.png", window_wid, window_hei, true);
 		}
 		else {
-			loadimage(0, "res/失败.jpg", window_wid, window_hei, true);
+			loadimage(0, "res/defeat.png", window_wid, window_hei, true);
 		}
-		Sleep(3000);
+		Sleep(2000);
 		return true;
 		
 	}
 	if (isOverLong()||isFourFour()||isThreeThree()) {
-		Sleep(1500);
-		if (playerFlag == false) {
-			loadimage(0, "res/失败.jpg", window_wid, window_hei, true);
-		}
-		else {
-			loadimage(0, "res/胜利.jpg", window_wid, window_hei, true);
-		}
-		Sleep(3000);
+		Sleep(2000);
+		loadimage(0, "res/defeat.png", window_wid, window_hei, true);
+		Sleep(2000);
 		return true;
 	}
 	return false;
@@ -393,7 +388,62 @@ bool Board::isFourFour()
 	else return false;
 }
 
-bool Board::isThreeThree()
+/*bool Board::isFourFour() {
+    int dr[] = { 0, 1, 1, -1 };
+    int dc[] = { 1, 0, 1, 1 };
+    int row = lastPos.row;
+    int col = lastPos.col;
+    int inicolor = BLACK_CHESS;
+    int size = getGradeSize();
+    int fcnt = 0;
+
+    for (int i = 0; i < 4; i++) {
+        int cnt = 1;
+        int nr = row + dr[i], nc = col + dc[i];
+        // 计算正向连续的棋子数
+        while (nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == inicolor) {
+            cnt++;
+            nr += dr[i];
+            nc += dc[i];
+        }
+        bool openEnd1 = nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == 0;
+
+        // 计算反向连续的棋子数
+        nr = row - dr[i], nc = col - dc[i];
+        while (nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == inicolor) {
+            cnt++;
+            nr -= dr[i];
+            nc -= dc[i];
+        }
+        bool openEnd2 = nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == 0;
+
+        // 检查活四棋型
+        if (cnt == 4 && openEnd1 && openEnd2) {
+            fcnt++;
+        } else if (cnt == 3 && openEnd1 && openEnd2) {
+            // 检查111o1和1o111
+            if ((nr - dr[i] < 0 || nr - dr[i] >= size || nc - dc[i] < 0 || nc - dc[i] >= size || boardMap[nr - dr[i]][nc - dc[i]] != inicolor) &&
+                (row + dr[i] < 0 || row + dr[i] >= size || col + dc[i] < 0 || col + dc[i] >= size || boardMap[row + dr[i]][col + dc[i]] != inicolor)) {
+                fcnt++;
+            }
+        } else if (cnt == 2 && openEnd1 && openEnd2) {
+            // 检查11o11
+            if ((nr - dr[i] < 0 || nr - dr[i] >= size || nc - dc[i] < 0 || nc - dc[i] >= size || boardMap[nr - dr[i]][nc - dc[i]] != inicolor) &&
+                (row + dr[i] < 0 || row + dr[i] >= size || col + dc[i] < 0 || col + dc[i] >= size || boardMap[row + dr[i]][col + dc[i]] != inicolor)) {
+                fcnt++;
+            }
+        } else if (cnt == 1 && openEnd1 && openEnd2) {
+            // 检查o1111和1111o
+            if ((nr - dr[i] < 0 || nr - dr[i] >= size || nc - dc[i] < 0 || nc - dc[i] >= size || boardMap[nr - dr[i]][nc - dc[i]] != inicolor) &&
+                (row + dr[i] < 0 || row + dr[i] >= size || col + dc[i] < 0 || col + dc[i] >= size || boardMap[row + dr[i]][col + dc[i]] != inicolor)) {
+                fcnt++;
+            }
+        }
+    }
+
+    return fcnt >= 2;
+}*/
+/*bool Board::isThreeThree()
 {
 	int dr[] = { 0,1,1,-1 };
 	int dc[] = { 1,0,1,1 };
@@ -426,8 +476,67 @@ bool Board::isThreeThree()
 	}
 	if (tcnt >= 2) return true;
 	else return false;
-}
+}*/
+bool Board::isThreeThree() {
+    int dr[] = { 0, 1, 1, -1 };
+    int dc[] = { 1, 0, 1, 1 };
+    int row = lastPos.row;
+    int col = lastPos.col;
+    int inicolor = BLACK_CHESS;
+    int size = getGradeSize();
+    int tcnt = 0;
 
+    for (int i = 0; i <= 3; i++) {
+        int cnt = 1;
+        int nr = row + dr[i], nc = col + dc[i];
+        // 计算正向连续的棋子数
+        while (nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == inicolor) {
+            cnt++;
+            nr += dr[i];
+            nc += dc[i];
+        }
+        bool openEnd1 = nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == 0;
+
+        // 计算反向连续的棋子数
+        nr = row - dr[i], nc = col - dc[i];
+        while (nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == inicolor) {
+            cnt++;
+            nr -= dr[i];
+            nc -= dc[i];
+        }
+        bool openEnd2 = nr >= 0 && nr < size && nc >= 0 && nc < size && boardMap[nr][nc] == 0;
+
+        // 检查活三棋型
+        if (cnt == 3) {
+            // o1o11o
+            if (openEnd1 && openEnd2 && 
+                ((row - dr[i] >= 0 && row - dr[i] < size && col - dc[i] >= 0 && col - dc[i] < size && boardMap[row - dr[i]][col - dc[i]] == 0) ||
+                 (nr + dr[i] >= 0 && nr + dr[i] < size && nc + dc[i] >= 0 && nc + dc[i] < size && boardMap[nr + dr[i]][nc + dc[i]] == 0))) {
+                tcnt++;
+            }
+            // o11o1o
+            else if (openEnd1 && openEnd2 && 
+                     ((row + dr[i] >= 0 && row + dr[i] < size && col + dc[i] >= 0 && col + dc[i] < size && boardMap[row + dr[i]][col + dc[i]] == 0) ||
+                      (nr - dr[i] >= 0 && nr - dr[i] < size && nc - dc[i] >= 0 && nc - dc[i] < size && boardMap[nr - dr[i]][nc - dc[i]] == 0))) {
+                tcnt++;
+            }
+            // oo111o
+            else if (openEnd1 && 
+                     (nr + dr[i] >= 0 && nr + dr[i] < size && nc + dc[i] >= 0 && nc + dc[i] < size && boardMap[nr + dr[i]][nc + dc[i]] == 0) &&
+                     (nr + 2 * dr[i] >= 0 && nr + 2 * dr[i] < size && nc + 2 * dc[i] >= 0 && nc + 2 * dc[i] < size && boardMap[nr + 2 * dr[i]][nc + 2 * dc[i]] != inicolor)) {
+                tcnt++;
+            }
+            // o111oo
+            else if (openEnd2 && 
+                     (nr - dr[i] >= 0 && nr - dr[i] < size && nc - dc[i] >= 0 && nc - dc[i] < size && boardMap[nr - dr[i]][nc - dc[i]] == 0) &&
+                     (nr - 2 * dr[i] >= 0 && nr - 2 * dr[i] < size && nc - 2 * dc[i] >= 0 && nc - 2 * dc[i] < size && boardMap[nr - 2 * dr[i]][nc - 2 * dc[i]] != inicolor)) {
+                tcnt++;
+            }
+        }
+    }
+
+    return tcnt >= 2;
+}
 
 bool Board::win(){
 	if (isFive() && !isOverLong()){
